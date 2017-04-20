@@ -1,3 +1,10 @@
+ruby2.3 (2.3.4-1bbox1~xenial1) xenial; urgency=low
+
+  * New upstream release, 2.3.4
+  * Patch to fix accidental removal of rb_thread_fd_close
+
+ -- John Leach <john@brightbox.co.uk>  Thu, 20 Apr 2017 18:53:34 +0100
+
 ruby2.3 (2.3.3-1bbox1~yakkety2) yakkety; urgency=low
 
   * New upstream release, 2.3.3
