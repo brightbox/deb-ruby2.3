@@ -7779,7 +7779,7 @@ yyreduce:
 #line 2507 "ripper.y"
     {
 #if 0
-			(yyval.val) = NEW_LIST((yyvsp[(1) - (2)].val) ? new_hash((yyvsp[(1) - (2)].val)) : 0);
+			(yyval.val) = (yyvsp[(1) - (2)].val) ? NEW_LIST(new_hash((yyvsp[(1) - (2)].val))) : 0;
 			(yyval.val) = arg_blk_pass((yyval.val), (yyvsp[(2) - (2)].val));
 #endif
 			(yyval.val) = arg_add_assocs(arg_new(), (yyvsp[(1) - (2)].val));
@@ -8042,7 +8042,7 @@ yyreduce:
 #line 2702 "ripper.y"
     {
 #if 0
-			(yyval.val) = 0;
+			(yyval.val) = NEW_BEGIN(0);
 #endif
 			(yyval.val) = dispatch1(paren, 0);
 
@@ -11978,7 +11978,6 @@ ripper_dispatch_delayed_token(struct parser_params *parser, int t)
 
 #define parser_encoding_name()  (current_enc->name)
 #define parser_mbclen()  mbclen((lex_p-1),lex_pend,current_enc)
-#define parser_precise_mbclen()  rb_enc_precise_mbclen((lex_p-1),lex_pend,current_enc)
 #define is_identchar(p,e,enc) (rb_enc_isalnum((unsigned char)(*(p)),(enc)) || (*(p)) == '_' || !ISASCII(*(p)))
 #define parser_is_identchar() (!parser->eofp && is_identchar((lex_p-1),lex_pend,current_enc))
 
@@ -12049,6 +12048,18 @@ token_info_pop(struct parser_params *parser, const char *token, size_t len)
     }
 
     xfree(ptinfo);
+}
+
+static int
+parser_precise_mbclen(struct parser_params *parser, const char *p)
+{
+    int len = rb_enc_precise_mbclen(p, lex_pend, current_enc);
+    if (!MBCLEN_CHARFOUND_P(len)) {
+	compile_error(PARSER_ARG "invalid multibyte char (%s)", parser_encoding_name());
+	return -1;
+    }
+
+    return len;
 }
 
 static int
@@ -12831,11 +12842,8 @@ dispose_string(VALUE str)
 static int
 parser_tokadd_mbchar(struct parser_params *parser, int c)
 {
-    int len = parser_precise_mbclen();
-    if (!MBCLEN_CHARFOUND_P(len)) {
-	compile_error(PARSER_ARG "invalid multibyte char (%s)", parser_encoding_name());
-	return -1;
-    }
+    int len = parser_precise_mbclen(parser, lex_p-1);
+    if (len < 0) return -1;
     tokadd(c);
     lex_p += --len;
     if (len > 0) tokcopy(len);
@@ -13147,16 +13155,14 @@ parser_parse_string(struct parser_params *parser, NODE *quote)
     pushback(c);
     if (tokadd_string(func, term, paren, &quote->nd_nest,
 		      &enc) == -1) {
-	ruby_sourceline = nd_line(quote);
-	if (func & STR_FUNC_REGEXP) {
-	    if (parser->eofp)
+	if (parser->eofp) {
+	    if (func & STR_FUNC_REGEXP) {
 		compile_error(PARSER_ARG "unterminated regexp meets end of file");
-	    return tREGEXP_END;
-	}
-	else {
-	    if (parser->eofp)
+	    }
+	    else {
 		compile_error(PARSER_ARG "unterminated string meets end of file");
-	    return tSTRING_END;
+	    }
+	    quote->nd_func = -1;
 	}
     }
 
