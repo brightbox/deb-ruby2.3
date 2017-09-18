@@ -1,3 +1,9 @@
+ruby2.3 (2.3.5-1bbox1~xenial1) xenial; urgency=medium
+
+  * New upsream release, 2.3.5
+
+ -- John Leach <john@johnleach.co.uk>  Mon, 18 Sep 2017 18:00:23 +0100
+
 ruby2.3 (2.3.4-1bbox1~xenial1) xenial; urgency=low
 
   * New upstream release, 2.3.4
