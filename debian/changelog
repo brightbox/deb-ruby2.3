@@ -1,3 +1,9 @@
+ruby2.3 (2.3.6-1bbox1~xenial1) xenial; urgency=medium
+
+  * New upstream release, 2.3.6. Fixes CVE-2017-17405.
+
+ -- John Leach <john@brightbox.co.uk>  Fri, 12 Jan 2018 18:21:20 +0000
+
 ruby2.3 (2.3.5-1bbox2~xenial2) xenial; urgency=low
 
   * Ignore explicit_bzero symbol to fix building on Artful
