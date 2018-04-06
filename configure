@@ -793,6 +793,7 @@ ac_ct_OBJDUMP
 OBJDUMP
 ASFLAGS
 AS
+ARFLAGS
 AR
 RANLIB
 try_header
@@ -5809,6 +5810,18 @@ fi
      ;;
 esac
 
+case "$target_os" in #(
+  darwin*) :
+
+if libtool 2>&1 | grep no_warning_for_no_symbols > /dev/null; then
+  ac_cv_prog_ac_ct_RANLIB=:
+  ac_cv_prog_ac_ct_AR='libtool -static'
+  rb_cv_arflags='-no_warning_for_no_symbols -o'
+fi
+ ;; #(
+  *) :
+     ;;
+esac
 if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}ranlib", so it can be a program name with args.
 set dummy ${ac_tool_prefix}ranlib; ac_word=$2
@@ -6038,6 +6051,23 @@ done
 test -n "$AR" || AR="ar"
 
 fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $AR flags" >&5
+$as_echo_n "checking for $AR flags... " >&6; }
+if ${rb_cv_arflags+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+    if $AR rcD conftest.a > /dev/null 2>&1 && rm conftest.a; then :
+  rb_cv_arflags=rcD
+else
+  rb_cv_arflags=rcu
+fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $rb_cv_arflags" >&5
+    colorize_result "$rb_cv_arflags" ; }
+ARFLAGS="$rb_cv_arflags "
+
 
 if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}as", so it can be a program name with args.
@@ -20803,14 +20833,14 @@ fi
 
 if test "x$ac_cv_func_lgamma_r" = xyes; then :
 
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether lgamma_r handles -0.0" >&5
-$as_echo_n "checking whether lgamma_r handles -0.0... " >&6; }
-if ${rb_cv_lgamma_r_m0+:} false; then :
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether lgamma_r handles +0.0 and -0.0" >&5
+$as_echo_n "checking whether lgamma_r handles +0.0 and -0.0... " >&6; }
+if ${rb_cv_lgamma_r_pm0+:} false; then :
   $as_echo_n "(cached) " >&6
 else
 
 	if test "$cross_compiling" = yes; then :
-  rb_cv_lgamma_r_m0=yes
+  rb_cv_lgamma_r_pm0=yes
 
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
@@ -20830,21 +20860,27 @@ else
 int
 main(int argc, char **argv)
 {
-    int sign;
+    int sign = 0;
     double x = lgamma_r(-0.0, &sign);
 
     /* should be [+inf, -1] */
     if (x <= 0) return EXIT_FAILURE;
     if (!isinf(x)) return EXIT_FAILURE;
     if (sign != -1) return EXIT_FAILURE;
+
+    /* should be [+inf, 1] */
+    x = lgamma_r(+0.0, &sign);
+    if (x <= 0) return EXIT_FAILURE;
+    if (!isinf(x)) return EXIT_FAILURE;
+    if (sign != 1) return EXIT_FAILURE;
     return EXIT_SUCCESS;
 }
 
 _ACEOF
 if ac_fn_c_try_run "$LINENO"; then :
-  rb_cv_lgamma_r_m0=yes
+  rb_cv_lgamma_r_pm0=yes
 else
-  rb_cv_lgamma_r_m0=no
+  rb_cv_lgamma_r_pm0=no
 fi
 rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
   conftest.$ac_objext conftest.beam conftest.$ac_ext
@@ -20852,10 +20888,10 @@ fi
 
 
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $rb_cv_lgamma_r_m0" >&5
-    colorize_result "$rb_cv_lgamma_r_m0" ; }
-    if test "x$rb_cv_lgamma_r_m0" = xno; then :
-  $as_echo "#define LGAMMA_R_M0_FIX 1" >>confdefs.h
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $rb_cv_lgamma_r_pm0" >&5
+    colorize_result "$rb_cv_lgamma_r_pm0" ; }
+    if test "x$rb_cv_lgamma_r_pm0" = xno; then :
+  $as_echo "#define LGAMMA_R_PM0_FIX 1" >>confdefs.h
 
 fi
 
@@ -24403,21 +24439,21 @@ esac
 esac
 	# RUBY_APPEND_OPTION(XLDFLAGS)
 	case " ${XLDFLAGS-} " in #(
-  *' -framework CoreFoundation '*) :
+  *' -framework Foundation '*) :
      ;; #(
   '  ') :
-     XLDFLAGS="-framework CoreFoundation" ;; #(
+     XLDFLAGS="-framework Foundation" ;; #(
   *) :
-     XLDFLAGS="$XLDFLAGS -framework CoreFoundation" ;;
+     XLDFLAGS="$XLDFLAGS -framework Foundation" ;;
 esac
 	# RUBY_APPEND_OPTION(LIBRUBYARG_STATIC)
 	case " ${LIBRUBYARG_STATIC-} " in #(
-  *' -framework CoreFoundation '*) :
+  *' -framework Foundation '*) :
      ;; #(
   '  ') :
-     LIBRUBYARG_STATIC="-framework CoreFoundation" ;; #(
+     LIBRUBYARG_STATIC="-framework Foundation" ;; #(
   *) :
-     LIBRUBYARG_STATIC="$LIBRUBYARG_STATIC -framework CoreFoundation" ;;
+     LIBRUBYARG_STATIC="$LIBRUBYARG_STATIC -framework Foundation" ;;
 esac
 	 ;; #(
   osf*) :
