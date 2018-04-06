@@ -1,3 +1,9 @@
+ruby2.3 (2.3.7-1bbox1~xenial1) xenial; urgency=medium
+
+  * new upstream release, 2.3.7
+
+ -- John Leach <john@brightbox.co.uk>  Fri, 06 Apr 2018 18:22:28 +0100
+
 ruby2.3 (2.3.6-1bbox1~xenial1) xenial; urgency=medium
 
   * New upstream release, 2.3.6. Fixes CVE-2017-17405.
