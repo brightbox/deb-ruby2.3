@@ -2,7 +2,7 @@
 #
 #   forwardable.rb -
 #       $Release Version: 1.1$
-#       $Revision: 57570 $
+#       $Revision: 62820 $
 #       by Keiju ISHITSUKA(keiju@ishitsuka.com)
 #       original definition by delegator.rb
 #       Revised by Daniel J. Berger with suggestions from Florian Gross.
@@ -113,12 +113,9 @@ module Forwardable
   # Version of +forwardable.rb+
   FORWARDABLE_VERSION = "1.1.0"
 
-  FILE_REGEXP = %r"#{Regexp.quote(__FILE__)}"
-
   @debug = nil
   class << self
-    # If true, <tt>__FILE__</tt> will remain in the backtrace in the event an
-    # Exception is raised.
+    # ignored
     attr_accessor :debug
   end
 
@@ -203,8 +200,6 @@ module Forwardable
         def #{ali}(*args, &block)
           begin
             #{accessor}
-          ensure
-            $@.delete_if {|s| ::Forwardable::FILE_REGEXP =~ s} if $@ and !::Forwardable::debug
           end.__send__ :#{method}, *args, &block
         end
       end
