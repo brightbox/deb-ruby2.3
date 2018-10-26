@@ -1,3 +1,9 @@
+ruby2.3 (2.3.8-4bbox1~xenial1) xenial; urgency=medium
+
+  * build with gcc-6 on bionic rather than gcc-7
+
+ -- John Leach <john@brightbox.co.uk>  Wed, 24 Oct 2018 17:10:41 +0100
+
 ruby2.3 (2.3.8-2bbox1~xenial1) xenial; urgency=medium
 
   * new upstream release, 2.3.8.
