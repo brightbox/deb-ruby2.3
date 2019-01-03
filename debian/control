@@ -68,6 +68,7 @@ Multi-Arch: same
 Architecture: any
 Depends: libgmp-dev,
          libruby2.3 (= ${binary:Version}),
+         gcc-6 | gcc,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: Header files for compiling extension modules for the Ruby 2.3
