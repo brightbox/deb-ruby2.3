@@ -1,3 +1,9 @@
+ruby2.3 (2.3.8-4bbox2~bionic1) bionic; urgency=low
+
+  * use correct compiler as dependency for dev package
+
+ -- John Leach <john@brightbox.co.uk>  Thu, 03 Jan 2019 17:10:39 +0000
+
 ruby2.3 (2.3.8-4bbox1~xenial1) xenial; urgency=medium
 
   * build with gcc-6 on bionic rather than gcc-7
